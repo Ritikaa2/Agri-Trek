@@ -29,11 +29,16 @@
 
             <div class="bg-gradient-to-br from-yellow-500/20 via-orange-400/10 to-transparent border border-yellow-500/20 rounded-3xl p-8 relative overflow-hidden shadow-lg mb-10">
                 <div class="absolute -right-20 -top-20 w-64 h-64 bg-yellow-500/10 rounded-full blur-[64px] pointer-events-none"></div>
-                <div class="relative z-10">
-                    <h3 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-2">Available Subventions & Grants</h3>
-                    <p class="text-gray-600 dark:text-gray-400 max-w-3xl text-sm leading-relaxed">
-                        Explore Central and State-level agricultural schemes tailored for you. Based on your KYC and registered land profiles, you are eligible for several grants covering micro-irrigation, subsidies, and high-yield fertilizers.
-                    </p>
+                <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                    <div>
+                        <h3 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-2">Available Subventions & Grants</h3>
+                        <p class="text-gray-600 dark:text-gray-400 max-w-3xl text-sm leading-relaxed">
+                            Explore Central and State-level agricultural schemes tailored for you. Based on your KYC and registered land profiles, you are eligible for several grants covering micro-irrigation, subsidies, and high-yield fertilizers.
+                        </p>
+                    </div>
+                    <a href="{{ route('farmer.applications.index') }}" class="shrink-0 px-5 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold rounded-xl shadow-lg hover:scale-105 transition-transform">
+                        View My Applications
+                    </a>
                 </div>
             </div>
 
@@ -69,10 +74,14 @@
                                     <p class="text-lg font-bold text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-500/10 inline-block px-3 py-1 rounded-lg">{{ \Carbon\Carbon::parse($scheme->deadline)->format('F j, Y') }}</p>
                                 </div>
                                 @if(in_array($scheme->id, $appliedSchemeIds))
+                                    @php($application = $applicationsByScheme->get($scheme->id))
                                     <button disabled class="w-full py-4 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold rounded-xl flex items-center justify-center gap-2 cursor-not-allowed border border-emerald-500/20">
-                                        Applied
+                                        Applied - {{ ucfirst($application->status) }}
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                     </button>
+                                    <a href="{{ route('farmer.applications.index') }}" class="w-full mt-3 py-3 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold rounded-xl transition-all flex items-center justify-center gap-2 text-sm border border-emerald-500/20">
+                                        Track Application
+                                    </a>
                                 @else
                                     <form action="{{ route('farmer.schemes.apply', $scheme) }}" method="POST" class="w-full">
                                         @csrf
@@ -84,8 +93,8 @@
                                 @endif
                                 
                                 @if($scheme->government_link)
-                                    <a href="{{ $scheme->government_link }}" target="_blank" class="w-full mt-3 py-3 bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 font-bold rounded-xl transition-all flex items-center justify-center gap-2 text-sm border border-blue-500/20">
-                                        Official Portal
+                                    <a href="{{ $scheme->government_link }}" target="_blank" rel="noopener noreferrer" class="w-full mt-3 py-3 bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 font-bold rounded-xl transition-all flex items-center justify-center gap-2 text-sm border border-blue-500/20">
+                                        External Govt Website
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                                     </a>
                                 @endif

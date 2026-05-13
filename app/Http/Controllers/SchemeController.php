@@ -17,11 +17,13 @@ class SchemeController extends Controller
         $schemes = Scheme::where('status', 'active')->get();
         
         $appliedSchemeIds = [];
+        $applicationsByScheme = collect();
         if (Auth::user() && Auth::user()->farmer) {
-            $appliedSchemeIds = Auth::user()->farmer->applications()->pluck('scheme_id')->toArray();
+            $applicationsByScheme = Auth::user()->farmer->applications()->get()->keyBy('scheme_id');
+            $appliedSchemeIds = $applicationsByScheme->keys()->toArray();
         }
 
-        return view('farmer.schemes.index', compact('schemes', 'appliedSchemeIds'));
+        return view('farmer.schemes.index', compact('schemes', 'appliedSchemeIds', 'applicationsByScheme'));
     }
 
     /**

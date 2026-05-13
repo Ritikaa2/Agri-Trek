@@ -12,9 +12,6 @@ class SchemeSeeder extends Seeder
      */
     public function run(): void
     {
-        // Clear existing schemes
-        Scheme::truncate();
-
         $schemes = [
             [
                 'title' => 'PMKSY',
@@ -59,11 +56,47 @@ class SchemeSeeder extends Seeder
                 'government_link' => 'https://pmkisan.gov.in/',
                 'status' => 'active',
                 'max_beneficiaries' => 10000000,
-            ]
+            ],
+            [
+                'title' => 'PMFBY',
+                'name' => 'Pradhan Mantri Fasal Bima Yojana (PMFBY)',
+                'description' => 'Crop insurance support against yield losses caused by natural calamities, pests, and diseases.',
+                'eligibility_criteria' => 'Farmers growing notified crops in notified areas, including sharecroppers and tenant farmers where permitted.',
+                'benefits' => 'Low farmer premium rates with claim support for crop loss events.',
+                'deadline' => now()->addMonths(3)->format('Y-m-d'),
+                'government_link' => 'https://pmfby.gov.in/',
+                'status' => 'active',
+                'max_beneficiaries' => null,
+            ],
+            [
+                'title' => 'AIF',
+                'name' => 'Agriculture Infrastructure Fund',
+                'description' => 'Medium to long-term financing facility for post-harvest management and community farming assets.',
+                'eligibility_criteria' => 'Farmers, FPOs, PACS, agri entrepreneurs, startups, and eligible community farming projects.',
+                'benefits' => 'Interest subvention and credit guarantee support for eligible infrastructure projects.',
+                'deadline' => now()->addMonths(6)->format('Y-m-d'),
+                'government_link' => 'https://agriinfra.dac.gov.in/',
+                'status' => 'active',
+                'max_beneficiaries' => null,
+            ],
+            [
+                'title' => 'Soil Health Card',
+                'name' => 'Soil Health Card Scheme',
+                'description' => 'Soil testing based advisory for balanced fertilizer use and better crop productivity.',
+                'eligibility_criteria' => 'Farmers requiring soil nutrient testing and crop-wise fertilizer recommendations.',
+                'benefits' => 'Soil nutrient report with crop-specific recommendations to reduce input cost.',
+                'deadline' => now()->addMonths(9)->format('Y-m-d'),
+                'government_link' => 'https://soilhealth.dac.gov.in/',
+                'status' => 'active',
+                'max_beneficiaries' => null,
+            ],
         ];
 
         foreach ($schemes as $scheme) {
-            Scheme::create($scheme);
+            Scheme::updateOrCreate(
+                ['title' => $scheme['title']],
+                $scheme
+            );
         }
     }
 }

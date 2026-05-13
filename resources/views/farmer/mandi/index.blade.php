@@ -35,7 +35,9 @@
                                 <th scope="col" class="px-8 py-4 rounded-tl-xl">Commodity</th>
                                 <th scope="col" class="px-8 py-4">Price (₹/Qtl)</th>
                                 <th scope="col" class="px-8 py-4">Trend</th>
-                                <th scope="col" class="px-8 py-4 rounded-tr-xl">24h Change</th>
+                                <th scope="col" class="px-8 py-4">24h Change</th>
+                                <th scope="col" class="px-8 py-4">30 Day</th>
+                                <th scope="col" class="px-8 py-4 rounded-tr-xl">Gain / Loss</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -71,10 +73,70 @@
                                 <td class="px-8 py-5 font-medium {{ str_starts_with($data['change'], '+') ? 'text-emerald-600 dark:text-emerald-400' : (str_starts_with($data['change'], '-') ? 'text-red-500' : 'text-gray-500') }}">
                                     {{ $data['change'] }}
                                 </td>
+                                <td class="px-8 py-5 font-semibold {{ $data['thirty_day_change'] > 0 ? 'text-emerald-600 dark:text-emerald-400' : ($data['thirty_day_change'] < 0 ? 'text-red-500' : 'text-gray-500') }}">
+                                    {{ $data['thirty_day_change'] > 0 ? '+' : '' }}{{ $data['thirty_day_change'] }}%
+                                </td>
+                                <td class="px-8 py-5 font-mono font-bold {{ $data['thirty_day_gain_loss'] > 0 ? 'text-emerald-600 dark:text-emerald-400' : ($data['thirty_day_gain_loss'] < 0 ? 'text-red-500' : 'text-gray-500') }}">
+                                    {{ $data['thirty_day_gain_loss'] > 0 ? '+' : '' }}Rs. {{ number_format($data['thirty_day_gain_loss']) }}/Qtl
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            <div id="portfolio-analysis" class="mt-8 bg-white dark:bg-[#161d19] border border-gray-100 dark:border-gray-800 rounded-3xl p-8 shadow-xl">
+                <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-8">
+                    <div>
+                        <h3 class="text-2xl font-black text-gray-900 dark:text-white">Portfolio Analysis</h3>
+                        <p class="text-sm text-gray-500 mt-1">Last 30 days rising and loss data for your mandi crop portfolio.</p>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <div class="rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 px-4 py-3">
+                            <p class="text-xs uppercase font-bold text-gray-500">Tracked</p>
+                            <p class="text-xl font-black text-gray-900 dark:text-white">{{ $portfolioSummary['tracked_crops'] }}</p>
+                        </div>
+                        <div class="rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-900/40 px-4 py-3">
+                            <p class="text-xs uppercase font-bold text-emerald-600 dark:text-emerald-400">Rising</p>
+                            <p class="text-xl font-black text-emerald-700 dark:text-emerald-300">{{ $portfolioSummary['rising'] }}</p>
+                        </div>
+                        <div class="rounded-2xl bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/40 px-4 py-3">
+                            <p class="text-xs uppercase font-bold text-red-600 dark:text-red-400">Loss</p>
+                            <p class="text-xl font-black text-red-700 dark:text-red-300">{{ $portfolioSummary['falling'] }}</p>
+                        </div>
+                        <div class="rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 px-4 py-3">
+                            <p class="text-xs uppercase font-bold text-gray-500">Net / Qtl</p>
+                            <p class="text-xl font-black {{ $portfolioSummary['net_gain_loss'] >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500' }}">{{ $portfolioSummary['net_gain_loss'] >= 0 ? '+' : '' }}Rs. {{ number_format($portfolioSummary['net_gain_loss']) }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-4">
+                    @foreach($portfolioRows as $row)
+                        <div class="rounded-2xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 p-5">
+                            <div class="flex items-start justify-between gap-4 mb-4">
+                                <div>
+                                    <h4 class="font-bold text-gray-900 dark:text-white">{{ $row['crop'] }}</h4>
+                                    <p class="text-xs text-gray-500">30 days ago Rs. {{ number_format($row['price_30_days_ago']) }} -> today Rs. {{ number_format($row['price']) }}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm font-black {{ $row['thirty_day_gain_loss'] >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500' }}">{{ $row['thirty_day_gain_loss'] >= 0 ? '+' : '' }}Rs. {{ number_format($row['thirty_day_gain_loss']) }}</p>
+                                    <p class="text-xs font-bold {{ $row['thirty_day_change'] >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500' }}">{{ $row['thirty_day_change'] >= 0 ? '+' : '' }}{{ $row['thirty_day_change'] }}%</p>
+                                </div>
+                            </div>
+                            <div class="flex items-end gap-1 h-20">
+                                @foreach($row['history'] as $point)
+                                    @php
+                                        $min = collect($row['history'])->min('price');
+                                        $max = collect($row['history'])->max('price');
+                                        $height = $max === $min ? 50 : 20 + (($point['price'] - $min) / ($max - $min) * 60);
+                                    @endphp
+                                    <div title="{{ $point['date'] }}: Rs. {{ number_format($point['price']) }}" class="flex-1 rounded-t {{ $row['thirty_day_gain_loss'] >= 0 ? 'bg-emerald-500/70' : 'bg-red-500/70' }}" style="height: {{ $height }}px"></div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
 
@@ -91,9 +153,9 @@
                             <p class="text-indigo-100 max-w-2xl text-sm leading-relaxed">Wheat (Lok-1) and Paddy (Basmati) are showing strong upward momentum ahead of the festive season. If your storage facilities are optimal, withholding sale for 5-7 days may increase profits. Soybean remains stable, excellent for immediate offload.</p>
                         </div>
                     </div>
-                    <button class="px-6 py-2.5 bg-white text-indigo-600 font-bold rounded-lg shadow-lg hover:scale-105 transition-transform whitespace-nowrap">
+                    <a href="#portfolio-analysis" class="px-6 py-2.5 bg-white text-indigo-600 font-bold rounded-lg shadow-lg hover:scale-105 transition-transform whitespace-nowrap">
                         Analyze Portfolio
-                    </button>
+                    </a>
                 </div>
             </div>
 

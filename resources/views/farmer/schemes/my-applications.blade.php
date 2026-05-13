@@ -67,7 +67,8 @@
                                     @endif
                                     
                                     @if($application->scheme->government_link)
-                                        <a href="{{ $application->scheme->government_link }}" target="_blank" class="p-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-xl transition-colors" title="Official Portal">
+                                        <a href="{{ $application->scheme->government_link }}" target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 rounded-xl transition-colors font-bold text-sm inline-flex items-center gap-2" title="External Govt Website">
+                                            Govt Website
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                                         </a>
                                     @endif

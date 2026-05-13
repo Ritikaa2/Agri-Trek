@@ -14,16 +14,27 @@ class AiAgentController extends Controller
     public function chat(Request $request)
     {
         $request->validate([
-            'message' => 'required|string|max:1000'
+            'message' => 'nullable|string|max:1000',
+            'image' => 'nullable|image|max:4096',
         ]);
 
-        $userMessage = strtolower($request->message);
+        if (!$request->filled('message') && !$request->hasFile('image')) {
+            return response()->json([
+                'reply' => 'Please type a question or attach a crop image for analysis.',
+            ], 422);
+        }
+
+        $userMessage = strtolower((string) $request->message);
+        $hasImage = $request->hasFile('image');
         
         // Simulated AI Responses
         // In a real scenario, this would call an API like OpenAI or Gemini
         $reply = "I'm analyzing your request...";
 
-        if (str_contains($userMessage, 'weather') || str_contains($userMessage, 'rain')) {
+        if ($hasImage) {
+            $image = $request->file('image');
+            $reply = "I received your crop image ({$image->getClientOriginalName()}). From a visual agronomy check, inspect leaves for yellowing, curling, fungal spots, pest bite marks, and moisture stress. If you share the crop name and affected area, I can suggest a more specific treatment plan.";
+        } elseif (str_contains($userMessage, 'weather') || str_contains($userMessage, 'rain')) {
             $reply = "Based on the upcoming forecast, we expect rain on Wednesday. It is highly advised to avoid spraying pesticides or insecticides until Thursday to prevent runoff.";
         } elseif (str_contains($userMessage, 'pesticide') || str_contains($userMessage, 'insecticide') || str_contains($userMessage, 'pest')) {
             $reply = "For pest control on your current crops, ensure you are using the designated dosage. For cotton, consider using Neem-based biopesticides to prevent bollworm infestations. Always wear protective gear.";

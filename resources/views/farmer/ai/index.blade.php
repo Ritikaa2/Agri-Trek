@@ -41,6 +41,9 @@
                             <!-- Message Content -->
                             <div class="px-5 py-3.5 text-[15px] leading-relaxed shadow-sm max-w-[85%]"
                                  :class="msg.role === 'user' ? 'bg-emerald-600 text-white rounded-2xl rounded-tr-sm order-1' : 'bg-gray-50 dark:bg-[#0d1310] border border-gray-100 dark:border-gray-800 rounded-2xl rounded-tl-sm text-gray-800 dark:text-gray-200'">
+                                <template x-if="msg.image">
+                                    <img :src="msg.image" alt="Uploaded crop image" class="mb-3 max-h-48 rounded-xl border border-white/20 object-cover">
+                                </template>
                                 <span x-text="msg.content"></span>
                             </div>
 
@@ -73,10 +76,25 @@
                         <button @click="sendPrompt('What crop rotation is best for Black soil?')" class="whitespace-nowrap px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm text-purple-600 dark:text-purple-400 rounded-full hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors">🌱 Crop Rotation</button>
                     </div>
 
+                    <div x-show="imagePreview" class="mb-3 flex items-center justify-between gap-3 rounded-2xl border border-purple-200 bg-purple-50 p-3 dark:border-purple-900/50 dark:bg-purple-950/20">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <img :src="imagePreview" alt="Selected crop image" class="h-14 w-14 rounded-xl object-cover">
+                            <div class="min-w-0">
+                                <p class="truncate text-sm font-bold text-gray-800 dark:text-gray-100" x-text="imageName"></p>
+                                <p class="text-xs text-gray-500">Ready for crop image analysis</p>
+                            </div>
+                        </div>
+                        <button type="button" @click="clearImage" class="shrink-0 rounded-xl bg-white px-3 py-2 text-xs font-bold text-gray-600 shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700">Remove</button>
+                    </div>
+
                     <form @submit.prevent="sendMessage" class="relative flex items-center gap-3">
-                        <input x-model="userInput" type="text" placeholder="Ask your AI Agronomist..." class="w-full bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white rounded-2xl py-4 pl-6 pr-16 shadow-inner focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
+                        <label class="shrink-0 w-12 h-12 bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 text-purple-600 dark:text-purple-400 rounded-2xl shadow-inner flex items-center justify-center cursor-pointer hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors" title="Upload crop image">
+                            <input type="file" accept="image/*" class="hidden" @change="handleImage">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        </label>
+                        <input x-model="userInput" type="text" placeholder="Ask your AI Agronomist or attach crop image..." class="w-full bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white rounded-2xl py-4 pl-6 pr-16 shadow-inner focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
                         
-                        <button type="submit" :disabled="loading || !userInput.trim()" class="absolute right-2 w-10 h-10 bg-purple-600 hover:bg-purple-500 disabled:bg-gray-300 dark:disabled:bg-gray-700 rounded-xl text-white flex items-center justify-center transition-transform hover:scale-105 active:scale-95 disabled:scale-100 disabled:cursor-not-allowed">
+                        <button type="submit" :disabled="loading || (!userInput.trim() && !imageFile)" class="absolute right-2 w-10 h-10 bg-purple-600 hover:bg-purple-500 disabled:bg-gray-300 dark:disabled:bg-gray-700 rounded-xl text-white flex items-center justify-center transition-transform hover:scale-105 active:scale-95 disabled:scale-100 disabled:cursor-not-allowed">
                             <svg class="w-5 h-5 -ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
                         </button>
                     </form>
@@ -97,28 +115,51 @@
                 userInput: '',
                 messages: [],
                 loading: false,
+                imageFile: null,
+                imagePreview: '',
+                imageName: '',
                 sendPrompt(text) {
                     this.userInput = text;
                     this.sendMessage();
                 },
+                handleImage(event) {
+                    const file = event.target.files[0];
+                    if (!file) return;
+                    this.imageFile = file;
+                    this.imageName = file.name;
+                    this.imagePreview = URL.createObjectURL(file);
+                    event.target.value = '';
+                },
+                clearImage() {
+                    if (this.imagePreview) URL.revokeObjectURL(this.imagePreview);
+                    this.imageFile = null;
+                    this.imagePreview = '';
+                    this.imageName = '';
+                },
                 sendMessage() {
                     const text = this.userInput.trim();
-                    if (!text) return;
+                    if (!text && !this.imageFile) return;
 
                     // Add user message
-                    this.messages.push({ role: 'user', content: text });
+                    this.messages.push({ role: 'user', content: text || 'Please analyze this crop image.', image: this.imagePreview });
                     this.userInput = '';
                     this.loading = true;
                     this.scrollToBottom();
+
+                    const formData = new FormData();
+                    formData.append('message', text);
+                    if (this.imageFile) formData.append('image', this.imageFile);
+                    this.imageFile = null;
+                    this.imagePreview = '';
+                    this.imageName = '';
 
                     // Send to backend
                     fetch('{{ route('farmer.ai.chat') }}', {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         },
-                        body: JSON.stringify({ message: text })
+                        body: formData
                     })
                     .then(res => res.json())
                     .then(data => {
