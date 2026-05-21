@@ -35,4 +35,14 @@ return [
         ],
     ],
 
+    'weather' => [
+        'forecast_url' => env('WEATHER_FORECAST_URL', 'https://api.open-meteo.com/v1/forecast'),
+        'geocoding_url' => env('WEATHER_GEOCODING_URL', 'https://geocoding-api.open-meteo.com/v1/search'),
+        'country_code' => env('WEATHER_COUNTRY_CODE', 'IN'),
+        'cache_minutes' => env('WEATHER_CACHE_MINUTES', 30),
+        'fallback_name' => env('WEATHER_FALLBACK_NAME', 'Indore, Madhya Pradesh'),
+        'fallback_latitude' => env('WEATHER_FALLBACK_LATITUDE', 22.7196),
+        'fallback_longitude' => env('WEATHER_FALLBACK_LONGITUDE', 75.8577),
+    ],
+
 ];

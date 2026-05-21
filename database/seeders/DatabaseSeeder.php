@@ -15,27 +15,37 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $admin = new \App\Models\User();
-        $admin->name = 'System Admin';
-        $admin->email = 'admin@agritrek.test';
-        $admin->password = bcrypt('password');
-        $admin->role = 'admin';
-        $admin->save();
+        $admin = \App\Models\User::updateOrCreate(
+            ['email' => 'admin@agritrek.test'],
+            [
+                'name' => 'System Admin',
+                'password' => bcrypt('password'),
+                'role' => 'admin',
+                'email_verified_at' => now(),
+            ]
+        );
 
-        $farmer = new \App\Models\User();
-        $farmer->name = 'John Doe';
-        $farmer->email = 'farmer@agritrek.test';
-        $farmer->password = bcrypt('password');
-        $farmer->role = 'farmer';
-        $farmer->save();
+        $farmer = \App\Models\User::updateOrCreate(
+            ['email' => 'farmer@agritrek.test'],
+            [
+                'name' => 'John Doe',
+                'password' => bcrypt('password'),
+                'role' => 'farmer',
+                'email_verified_at' => now(),
+            ]
+        );
 
-        \App\Models\Farmer::create(['user_id' => $farmer->id, 'aadhaar_no' => '123456789012', 'phone' => '9876543210']);
+        \App\Models\Farmer::updateOrCreate(
+            ['user_id' => $farmer->id],
+            [
+                'aadhaar_no' => '123456789012',
+                'phone' => '9876543210',
+                'address' => 'Demo Farm Road, Plot 12',
+                'village' => 'Shivpura',
+                'district' => 'Indore',
+            ]
+        );
 
-        \App\Models\Scheme::create([
-            'title' => 'PM Kisan Samman Nidhi', 
-            'description' => 'Financial support for small and marginal farmers.', 
-            'eligibility_criteria' => 'Must own less than 2 hectares of land.', 
-            'max_beneficiaries' => 1000
-        ]);
+        $this->call(SchemeSeeder::class);
     }
 }

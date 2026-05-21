@@ -1,164 +1,138 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-500 flex items-center justify-center">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <div class="space-y-4">
+            <span class="section-badge">Market tracking</span>
+            <div>
+                <h1 class="page-title">Live mandi prices</h1>
+                <p class="page-subtitle">Review commodity movement, 30-day changes, and simple portfolio cues before selling.</p>
             </div>
-            <h2 class="font-bold text-2xl text-gray-800 dark:text-white leading-tight tracking-tight">
-                {{ __('Live Mandi Prices') }}
-            </h2>
         </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            
-            <div class="bg-white dark:bg-[#161d19] border border-gray-100 dark:border-gray-800 rounded-3xl overflow-hidden shadow-2xl shadow-emerald-500/5">
-                <div class="p-8 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-[#0d1310]/50 flex flex-col md:flex-row items-center justify-between gap-4">
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Current Market Rates</h3>
-                        <p class="text-sm text-gray-500">Prices reflect the average local Mandi rates per Quintal (100kg).</p>
-                    </div>
-                    <div class="flex items-center gap-2 px-4 py-2 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-lg text-sm font-semibold border border-emerald-100 dark:border-emerald-800/50">
-                        <span class="relative flex h-3 w-3">
-                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                          <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-                        </span>
-                        Live Updates Active
-                    </div>
+    <div class="shell-container space-y-6">
+        <div class="panel">
+            <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+                <div>
+                    <h2 class="text-3xl font-semibold">Current market rates</h2>
+                    <p class="mt-3 text-sm leading-7 text-muted">Prices reflect average local mandi rates per quintal (100kg).</p>
                 </div>
+                <div class="status-pill status-success">Live updates active</div>
+            </div>
+        </div>
 
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-[#0d1310] dark:text-gray-300">
-                            <tr>
-                                <th scope="col" class="px-8 py-4 rounded-tl-xl">Commodity</th>
-                                <th scope="col" class="px-8 py-4">Price (₹/Qtl)</th>
-                                <th scope="col" class="px-8 py-4">Trend</th>
-                                <th scope="col" class="px-8 py-4">24h Change</th>
-                                <th scope="col" class="px-8 py-4">30 Day</th>
-                                <th scope="col" class="px-8 py-4 rounded-tr-xl">Gain / Loss</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($mandiPrices as $data)
-                            <tr class="bg-white dark:bg-[#161d19] border-b border-gray-50 dark:border-gray-800/60 hover:bg-gray-50 dark:hover:bg-[#0d1310] transition-colors">
-                                <td class="px-8 py-5 font-bold text-gray-900 dark:text-white flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-                                        <svg class="w-4 h-4" auto-inserted="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    </div>
-                                    {{ $data['crop'] }}
-                                </td>
-                                <td class="px-8 py-5 font-mono text-lg font-semibold text-gray-800 dark:text-gray-200">
-                                    ₹{{ number_format($data['price']) }}
-                                </td>
-                                <td class="px-8 py-5">
+        <div class="table-shell">
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-left text-sm">
+                    <thead class="table-head">
+                        <tr>
+                            <th class="px-6 py-4">Commodity</th>
+                            <th class="px-6 py-4">Price (Rs./Qtl)</th>
+                            <th class="px-6 py-4">Trend</th>
+                            <th class="px-6 py-4">24h Change</th>
+                            <th class="px-6 py-4">30 Day</th>
+                            <th class="px-6 py-4">Gain / Loss</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-[rgba(255,252,246,0.78)]">
+                        @foreach($mandiPrices as $data)
+                            <tr class="table-row">
+                                <td class="px-6 py-5 font-semibold text-[color:var(--ink)]">{{ $data['crop'] }}</td>
+                                <td class="px-6 py-5 font-mono text-[color:var(--ink)]">Rs. {{ number_format($data['price']) }}</td>
+                                <td class="px-6 py-5">
                                     @if($data['trend'] === 'up')
-                                        <span class="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-medium bg-emerald-50 dark:bg-emerald-900/20 px-2.5 py-1 rounded-md w-fit">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                                            Rising
-                                        </span>
+                                        <span class="status-pill status-success">Rising</span>
                                     @elseif($data['trend'] === 'down')
-                                        <span class="flex items-center gap-1.5 text-red-500 font-medium bg-red-50 dark:bg-red-900/20 px-2.5 py-1 rounded-md w-fit">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>
-                                            Falling
-                                        </span>
+                                        <span class="status-pill status-danger">Falling</span>
                                     @else
-                                        <span class="flex items-center gap-1.5 text-gray-500 font-medium bg-gray-50 dark:bg-gray-800 px-2.5 py-1 rounded-md w-fit">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>
-                                            Stable
-                                        </span>
+                                        <span class="status-pill status-info">Stable</span>
                                     @endif
                                 </td>
-                                <td class="px-8 py-5 font-medium {{ str_starts_with($data['change'], '+') ? 'text-emerald-600 dark:text-emerald-400' : (str_starts_with($data['change'], '-') ? 'text-red-500' : 'text-gray-500') }}">
+                                <td class="px-6 py-5 {{ str_starts_with($data['change'], '+') ? 'text-[color:var(--success)]' : (str_starts_with($data['change'], '-') ? 'text-[color:var(--danger)]' : 'text-muted') }}">
                                     {{ $data['change'] }}
                                 </td>
-                                <td class="px-8 py-5 font-semibold {{ $data['thirty_day_change'] > 0 ? 'text-emerald-600 dark:text-emerald-400' : ($data['thirty_day_change'] < 0 ? 'text-red-500' : 'text-gray-500') }}">
+                                <td class="px-6 py-5 font-semibold {{ $data['thirty_day_change'] > 0 ? 'text-[color:var(--success)]' : ($data['thirty_day_change'] < 0 ? 'text-[color:var(--danger)]' : 'text-muted') }}">
                                     {{ $data['thirty_day_change'] > 0 ? '+' : '' }}{{ $data['thirty_day_change'] }}%
                                 </td>
-                                <td class="px-8 py-5 font-mono font-bold {{ $data['thirty_day_gain_loss'] > 0 ? 'text-emerald-600 dark:text-emerald-400' : ($data['thirty_day_gain_loss'] < 0 ? 'text-red-500' : 'text-gray-500') }}">
+                                <td class="px-6 py-5 font-mono font-semibold {{ $data['thirty_day_gain_loss'] > 0 ? 'text-[color:var(--success)]' : ($data['thirty_day_gain_loss'] < 0 ? 'text-[color:var(--danger)]' : 'text-muted') }}">
                                     {{ $data['thirty_day_gain_loss'] > 0 ? '+' : '' }}Rs. {{ number_format($data['thirty_day_gain_loss']) }}/Qtl
                                 </td>
                             </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="portfolio-analysis" class="panel">
+            <div class="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+                <div>
+                    <h2 class="text-3xl font-semibold">Portfolio analysis</h2>
+                    <p class="mt-3 text-sm leading-7 text-muted">Thirty-day movement for your tracked mandi crops.</p>
+                </div>
+                <div class="grid gap-3 sm:grid-cols-4">
+                    <div class="panel-soft">
+                        <p class="eyebrow">Tracked</p>
+                        <p class="mt-2 text-2xl font-semibold">{{ $portfolioSummary['tracked_crops'] }}</p>
+                    </div>
+                    <div class="panel-soft">
+                        <p class="eyebrow">Rising</p>
+                        <p class="mt-2 text-2xl font-semibold text-[color:var(--success)]">{{ $portfolioSummary['rising'] }}</p>
+                    </div>
+                    <div class="panel-soft">
+                        <p class="eyebrow">Falling</p>
+                        <p class="mt-2 text-2xl font-semibold text-[color:var(--danger)]">{{ $portfolioSummary['falling'] }}</p>
+                    </div>
+                    <div class="panel-soft">
+                        <p class="eyebrow">Net / Qtl</p>
+                        <p class="mt-2 text-2xl font-semibold {{ $portfolioSummary['net_gain_loss'] >= 0 ? 'text-[color:var(--success)]' : 'text-[color:var(--danger)]' }}">
+                            {{ $portfolioSummary['net_gain_loss'] >= 0 ? '+' : '' }}Rs. {{ number_format($portfolioSummary['net_gain_loss']) }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 grid gap-4 lg:grid-cols-2">
+                @foreach($portfolioRows as $row)
+                    <div class="panel-soft">
+                        <div class="flex items-start justify-between gap-4">
+                            <div>
+                                <h3 class="text-xl font-semibold">{{ $row['crop'] }}</h3>
+                                <p class="mt-2 text-xs uppercase tracking-[0.16em] text-muted">
+                                    30 days ago Rs. {{ number_format($row['price_30_days_ago']) }} to today Rs. {{ number_format($row['price']) }}
+                                </p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm font-semibold {{ $row['thirty_day_gain_loss'] >= 0 ? 'text-[color:var(--success)]' : 'text-[color:var(--danger)]' }}">
+                                    {{ $row['thirty_day_gain_loss'] >= 0 ? '+' : '' }}Rs. {{ number_format($row['thirty_day_gain_loss']) }}
+                                </p>
+                                <p class="mt-1 text-xs font-bold {{ $row['thirty_day_change'] >= 0 ? 'text-[color:var(--success)]' : 'text-[color:var(--danger)]' }}">
+                                    {{ $row['thirty_day_change'] >= 0 ? '+' : '' }}{{ $row['thirty_day_change'] }}%
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="mt-5 flex h-24 items-end gap-1">
+                            @foreach($row['history'] as $point)
+                                @php
+                                    $min = collect($row['history'])->min('price');
+                                    $max = collect($row['history'])->max('price');
+                                    $height = $max === $min ? 50 : 20 + (($point['price'] - $min) / ($max - $min) * 60);
+                                @endphp
+                                <div title="{{ $point['date'] }}: Rs. {{ number_format($point['price']) }}" class="flex-1 rounded-t {{ $row['thirty_day_gain_loss'] >= 0 ? 'bg-[rgba(44,125,95,0.75)]' : 'bg-[rgba(181,85,68,0.72)]' }}" style="height: {{ $height }}px"></div>
                             @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div id="portfolio-analysis" class="mt-8 bg-white dark:bg-[#161d19] border border-gray-100 dark:border-gray-800 rounded-3xl p-8 shadow-xl">
-                <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-8">
-                    <div>
-                        <h3 class="text-2xl font-black text-gray-900 dark:text-white">Portfolio Analysis</h3>
-                        <p class="text-sm text-gray-500 mt-1">Last 30 days rising and loss data for your mandi crop portfolio.</p>
-                    </div>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                        <div class="rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 px-4 py-3">
-                            <p class="text-xs uppercase font-bold text-gray-500">Tracked</p>
-                            <p class="text-xl font-black text-gray-900 dark:text-white">{{ $portfolioSummary['tracked_crops'] }}</p>
-                        </div>
-                        <div class="rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-900/40 px-4 py-3">
-                            <p class="text-xs uppercase font-bold text-emerald-600 dark:text-emerald-400">Rising</p>
-                            <p class="text-xl font-black text-emerald-700 dark:text-emerald-300">{{ $portfolioSummary['rising'] }}</p>
-                        </div>
-                        <div class="rounded-2xl bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/40 px-4 py-3">
-                            <p class="text-xs uppercase font-bold text-red-600 dark:text-red-400">Loss</p>
-                            <p class="text-xl font-black text-red-700 dark:text-red-300">{{ $portfolioSummary['falling'] }}</p>
-                        </div>
-                        <div class="rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 px-4 py-3">
-                            <p class="text-xs uppercase font-bold text-gray-500">Net / Qtl</p>
-                            <p class="text-xl font-black {{ $portfolioSummary['net_gain_loss'] >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500' }}">{{ $portfolioSummary['net_gain_loss'] >= 0 ? '+' : '' }}Rs. {{ number_format($portfolioSummary['net_gain_loss']) }}</p>
                         </div>
                     </div>
-                </div>
-
-                <div class="grid lg:grid-cols-2 gap-4">
-                    @foreach($portfolioRows as $row)
-                        <div class="rounded-2xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 p-5">
-                            <div class="flex items-start justify-between gap-4 mb-4">
-                                <div>
-                                    <h4 class="font-bold text-gray-900 dark:text-white">{{ $row['crop'] }}</h4>
-                                    <p class="text-xs text-gray-500">30 days ago Rs. {{ number_format($row['price_30_days_ago']) }} -> today Rs. {{ number_format($row['price']) }}</p>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-sm font-black {{ $row['thirty_day_gain_loss'] >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500' }}">{{ $row['thirty_day_gain_loss'] >= 0 ? '+' : '' }}Rs. {{ number_format($row['thirty_day_gain_loss']) }}</p>
-                                    <p class="text-xs font-bold {{ $row['thirty_day_change'] >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500' }}">{{ $row['thirty_day_change'] >= 0 ? '+' : '' }}{{ $row['thirty_day_change'] }}%</p>
-                                </div>
-                            </div>
-                            <div class="flex items-end gap-1 h-20">
-                                @foreach($row['history'] as $point)
-                                    @php
-                                        $min = collect($row['history'])->min('price');
-                                        $max = collect($row['history'])->max('price');
-                                        $height = $max === $min ? 50 : 20 + (($point['price'] - $min) / ($max - $min) * 60);
-                                    @endphp
-                                    <div title="{{ $point['date'] }}: Rs. {{ number_format($point['price']) }}" class="flex-1 rounded-t {{ $row['thirty_day_gain_loss'] >= 0 ? 'bg-emerald-500/70' : 'bg-red-500/70' }}" style="height: {{ $height }}px"></div>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
+                @endforeach
             </div>
+        </div>
 
-            <!-- Market Advice Panel -->
-            <div class="mt-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
-                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-                <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
-                    <div class="flex items-start gap-4">
-                        <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center shrink-0">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
-                        </div>
-                        <div>
-                            <h4 class="text-xl font-bold mb-1">AI Market Insight</h4>
-                            <p class="text-indigo-100 max-w-2xl text-sm leading-relaxed">Wheat (Lok-1) and Paddy (Basmati) are showing strong upward momentum ahead of the festive season. If your storage facilities are optimal, withholding sale for 5-7 days may increase profits. Soybean remains stable, excellent for immediate offload.</p>
-                        </div>
-                    </div>
-                    <a href="#portfolio-analysis" class="px-6 py-2.5 bg-white text-indigo-600 font-bold rounded-lg shadow-lg hover:scale-105 transition-transform whitespace-nowrap">
-                        Analyze Portfolio
-                    </a>
-                </div>
-            </div>
-
+        <div class="panel-strong">
+            <span class="section-badge">AI market insight</span>
+            <h2 class="mt-5 text-3xl font-semibold">Suggested reading of the current cycle</h2>
+            <p class="mt-4 text-sm leading-7 text-muted">
+                Wheat (Lok-1) and Paddy (Basmati) continue to show strong upward movement. If your storage setup is dependable, waiting 5 to 7 days may improve returns. Soybean remains steady and is still suitable for immediate offload.
+            </p>
+            <a href="#portfolio-analysis" class="btn-primary mt-6">Analyze Portfolio</a>
         </div>
     </div>
 </x-app-layout>

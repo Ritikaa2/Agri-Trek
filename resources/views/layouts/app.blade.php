@@ -5,32 +5,29 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>AgriTrek | Dashboard & Intelligence</title>
+        <title>AgriTrek | Field Operations</title>
 
-        <!-- Google Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-        <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-        <style> body { font-family: 'Outfit', sans-serif; } </style>
     </head>
-    <body class="font-sans antialiased text-gray-900 dark:text-gray-100 bg-[#f4f7f5] dark:bg-[#0d1310] selection:bg-emerald-500 selection:text-white">
-        <div class="min-h-screen flex flex-col">
+    <body class="text-slate-900 antialiased">
+        <div class="relative min-h-screen overflow-x-hidden pb-10">
             @include('layouts.navigation')
 
-            <!-- Page Heading -->
             @isset($header)
-                <header class="bg-white/80 dark:bg-[#161d19]/80 backdrop-blur-xl border-b border-gray-200 dark:border-gray-800 sticky top-0 z-40">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
+                <header class="relative z-10 pt-8">
+                    <div class="shell-container">
+                        <div class="page-hero">
+                            {{ $header }}
+                        </div>
                     </div>
                 </header>
             @endisset
 
-            <!-- Page Content -->
-            <main class="flex-grow">
+            <main class="relative z-10 pt-8">
                 {{ $slot }}
             </main>
         </div>

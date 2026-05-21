@@ -1,3 +1,430 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    :root {
+        --bg: #f5f1e8;
+        --bg-strong: #ebe1cc;
+        --panel: rgba(255, 251, 244, 0.88);
+        --panel-strong: #fffdf8;
+        --panel-soft: rgba(236, 230, 217, 0.78);
+        --ink: #19342a;
+        --muted: #647166;
+        --line: rgba(25, 52, 42, 0.12);
+        --line-strong: rgba(25, 52, 42, 0.18);
+        --accent: #2d7c4b;
+        --accent-strong: #1d5d38;
+        --accent-soft: #dce9de;
+        --harvest: #c7753d;
+        --sky: #d7eaf6;
+        --warning: #c78632;
+        --danger: #b55544;
+        --success: #2c7d5f;
+        --shadow-lg: 0 24px 80px rgba(62, 65, 41, 0.14);
+        --shadow-md: 0 18px 44px rgba(62, 65, 41, 0.1);
+    }
+
+    html {
+        scroll-behavior: smooth;
+        background: var(--bg);
+    }
+
+    body {
+        min-height: 100vh;
+        color: var(--ink);
+        background-color: var(--bg);
+        background-image:
+            radial-gradient(circle at 0% 0%, rgba(199, 117, 61, 0.12), transparent 28%),
+            radial-gradient(circle at 100% 0%, rgba(45, 124, 75, 0.16), transparent 32%),
+            linear-gradient(180deg, #f8f4ec 0%, #f4eedf 54%, #f1eadb 100%);
+    }
+
+    body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+            linear-gradient(rgba(25, 52, 42, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(25, 52, 42, 0.03) 1px, transparent 1px);
+        background-size: 96px 96px;
+        mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.18), transparent 80%);
+        opacity: 0.55;
+        z-index: -1;
+    }
+
+    body,
+    input,
+    textarea,
+    select,
+    button {
+        font-family: 'Manrope', sans-serif;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: 'Fraunces', serif;
+        color: var(--ink);
+        letter-spacing: -0.03em;
+    }
+
+    a {
+        color: inherit;
+    }
+
+    ::selection {
+        color: #fffdf8;
+        background: rgba(45, 124, 75, 0.8);
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+
+    input:not([type='checkbox']):not([type='radio']):not([type='file']),
+    textarea,
+    select {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 1rem;
+        background: rgba(255, 253, 248, 0.92);
+        color: var(--ink);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        transition:
+            border-color 150ms ease,
+            box-shadow 150ms ease,
+            background-color 150ms ease,
+            transform 150ms ease;
+    }
+
+    input:not([type='checkbox']):not([type='radio']):not([type='file'])::placeholder,
+    textarea::placeholder {
+        color: rgba(100, 113, 102, 0.8);
+    }
+
+    input:not([type='checkbox']):not([type='radio']):not([type='file']):focus,
+    textarea:focus,
+    select:focus {
+        border-color: rgba(45, 124, 75, 0.55);
+        box-shadow:
+            0 0 0 5px rgba(45, 124, 75, 0.12),
+            inset 0 1px 0 rgba(255, 255, 255, 0.92);
+        outline: none;
+        background: #fffdf8;
+    }
+
+    input[readonly] {
+        background: rgba(231, 225, 211, 0.82);
+    }
+
+    textarea {
+        resize: vertical;
+    }
+}
+
+@layer components {
+    .shell-container {
+        @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+    }
+
+    .section-badge {
+        @apply inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-extrabold uppercase tracking-[0.28em];
+        color: var(--accent-strong);
+        background: rgba(220, 233, 222, 0.82);
+        border: 1px solid rgba(45, 124, 75, 0.16);
+    }
+
+    .section-badge::before {
+        content: '';
+        width: 0.65rem;
+        height: 0.65rem;
+        border-radius: 9999px;
+        background: linear-gradient(135deg, var(--harvest), var(--accent));
+        box-shadow: 0 0 0 4px rgba(45, 124, 75, 0.12);
+    }
+
+    .page-hero {
+        @apply relative overflow-hidden rounded-[2rem] border px-6 py-8 md:px-10 md:py-10;
+        background:
+            linear-gradient(145deg, rgba(255, 250, 243, 0.96), rgba(246, 239, 225, 0.92)),
+            linear-gradient(135deg, rgba(45, 124, 75, 0.08), rgba(199, 117, 61, 0.1));
+        border-color: var(--line-strong);
+        box-shadow: var(--shadow-md);
+    }
+
+    .page-hero::before {
+        content: '';
+        position: absolute;
+        inset: auto -6rem -5rem auto;
+        width: 18rem;
+        height: 18rem;
+        border-radius: 9999px;
+        background: radial-gradient(circle, rgba(45, 124, 75, 0.18), transparent 70%);
+        pointer-events: none;
+    }
+
+    .page-title {
+        @apply text-3xl md:text-5xl font-semibold leading-tight;
+    }
+
+    .page-subtitle {
+        @apply mt-3 max-w-3xl text-sm leading-7 md:text-base;
+        color: var(--muted);
+    }
+
+    .panel {
+        @apply rounded-[1.75rem] border p-6 md:p-8;
+        background: var(--panel);
+        border-color: var(--line);
+        box-shadow: var(--shadow-md);
+        backdrop-filter: blur(16px);
+    }
+
+    .panel-strong {
+        @apply rounded-[1.9rem] border p-6 md:p-8;
+        background: var(--panel-strong);
+        border-color: var(--line-strong);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .panel-soft {
+        @apply rounded-[1.5rem] border p-5;
+        background: rgba(255, 249, 240, 0.72);
+        border-color: rgba(25, 52, 42, 0.08);
+    }
+
+    .metric-card {
+        @apply relative overflow-hidden rounded-[1.5rem] border p-6;
+        background: linear-gradient(180deg, rgba(255, 252, 246, 0.96), rgba(240, 234, 222, 0.92));
+        border-color: var(--line);
+        box-shadow: 0 16px 36px rgba(60, 59, 40, 0.08);
+    }
+
+    .metric-card::after {
+        content: '';
+        position: absolute;
+        inset: 0 auto auto 0;
+        width: 100%;
+        height: 0.3rem;
+        background: linear-gradient(90deg, var(--accent), var(--harvest));
+        opacity: 0.85;
+    }
+
+    .eyebrow {
+        @apply text-xs font-extrabold uppercase tracking-[0.26em];
+        color: rgba(100, 113, 102, 0.9);
+    }
+
+    .btn-primary,
+    .btn-secondary,
+    .btn-ghost,
+    .btn-danger {
+        @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-bold transition duration-200;
+    }
+
+    .btn-primary {
+        color: #fffdf8;
+        background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+        box-shadow: 0 18px 30px rgba(45, 124, 75, 0.18);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 22px 36px rgba(45, 124, 75, 0.24);
+    }
+
+    .btn-secondary {
+        color: var(--ink);
+        background: rgba(255, 252, 245, 0.88);
+        border: 1px solid var(--line);
+        box-shadow: 0 14px 28px rgba(62, 65, 41, 0.08);
+    }
+
+    .btn-secondary:hover {
+        transform: translateY(-1px);
+        border-color: rgba(45, 124, 75, 0.22);
+    }
+
+    .btn-ghost {
+        color: var(--accent-strong);
+        background: rgba(220, 233, 222, 0.55);
+        border: 1px solid rgba(45, 124, 75, 0.15);
+    }
+
+    .btn-ghost:hover {
+        background: rgba(220, 233, 222, 0.82);
+    }
+
+    .btn-danger {
+        color: #fffaf6;
+        background: linear-gradient(135deg, var(--danger), #8d3e34);
+        box-shadow: 0 16px 28px rgba(181, 85, 68, 0.18);
+    }
+
+    .btn-danger:hover {
+        transform: translateY(-1px);
+    }
+
+    .field {
+        @apply space-y-2;
+    }
+
+    .field-label {
+        @apply text-sm font-bold uppercase tracking-[0.18em];
+        color: rgba(25, 52, 42, 0.78);
+    }
+
+    .field-input,
+    .field-select,
+    .field-textarea {
+        @apply px-4 py-3.5 text-sm;
+    }
+
+    .field-textarea {
+        @apply min-h-[7rem];
+    }
+
+    .field-hint {
+        @apply text-sm leading-6;
+        color: var(--muted);
+    }
+
+    .status-pill {
+        @apply inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-extrabold uppercase tracking-[0.16em];
+        border: 1px solid transparent;
+    }
+
+    .status-success {
+        color: var(--success);
+        background: rgba(44, 125, 95, 0.1);
+        border-color: rgba(44, 125, 95, 0.16);
+    }
+
+    .status-warning {
+        color: var(--warning);
+        background: rgba(199, 134, 50, 0.1);
+        border-color: rgba(199, 134, 50, 0.16);
+    }
+
+    .status-danger {
+        color: var(--danger);
+        background: rgba(181, 85, 68, 0.1);
+        border-color: rgba(181, 85, 68, 0.14);
+    }
+
+    .status-info {
+        color: var(--accent-strong);
+        background: rgba(220, 233, 222, 0.82);
+        border-color: rgba(45, 124, 75, 0.14);
+    }
+
+    .info-banner {
+        @apply flex items-start gap-4 rounded-[1.5rem] border p-5 md:p-6;
+        background: rgba(255, 250, 243, 0.88);
+        border-color: rgba(199, 117, 61, 0.18);
+    }
+
+    .table-shell {
+        @apply overflow-hidden rounded-[1.75rem] border;
+        border-color: var(--line);
+        background: rgba(255, 252, 246, 0.92);
+        box-shadow: var(--shadow-md);
+    }
+
+    .table-head {
+        @apply border-b text-xs font-extrabold uppercase tracking-[0.24em];
+        color: rgba(100, 113, 102, 0.95);
+        background: rgba(228, 220, 205, 0.7);
+        border-color: var(--line);
+    }
+
+    .table-row {
+        @apply transition-colors;
+        border-top: 1px solid rgba(25, 52, 42, 0.07);
+    }
+
+    .table-row:hover {
+        background: rgba(220, 233, 222, 0.28);
+    }
+
+    .dropdown-shell {
+        @apply overflow-hidden rounded-[1.5rem] border p-2;
+        background: rgba(255, 252, 246, 0.96);
+        border-color: var(--line);
+        box-shadow: var(--shadow-md);
+        backdrop-filter: blur(18px);
+    }
+
+    .auth-layout {
+        @apply min-h-screen lg:grid lg:grid-cols-[1.15fr_0.85fr];
+    }
+
+    .auth-side {
+        @apply relative hidden overflow-hidden lg:flex lg:flex-col lg:justify-between;
+        background:
+            linear-gradient(160deg, rgba(24, 58, 42, 0.96), rgba(29, 93, 56, 0.94)),
+            linear-gradient(180deg, rgba(199, 117, 61, 0.12), transparent);
+    }
+
+    .auth-side::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(circle at 15% 18%, rgba(248, 229, 185, 0.22), transparent 24%),
+            radial-gradient(circle at 82% 22%, rgba(199, 117, 61, 0.22), transparent 26%),
+            linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+        background-size: auto, auto, 92px 92px, 92px 92px;
+        opacity: 0.88;
+    }
+
+    .auth-card {
+        @apply relative mx-auto w-full max-w-xl rounded-[2rem] border px-6 py-8 sm:px-10 sm:py-10;
+        background: rgba(255, 251, 244, 0.9);
+        border-color: rgba(25, 52, 42, 0.1);
+        box-shadow: var(--shadow-lg);
+        backdrop-filter: blur(18px);
+    }
+
+    .auth-card::before {
+        content: '';
+        position: absolute;
+        inset: 1rem;
+        border-radius: 1.5rem;
+        border: 1px dashed rgba(45, 124, 75, 0.12);
+        pointer-events: none;
+    }
+
+    .empty-state {
+        @apply rounded-[1.75rem] border px-8 py-12 text-center;
+        background: rgba(255, 252, 246, 0.92);
+        border-color: var(--line);
+        box-shadow: var(--shadow-md);
+    }
+}
+
+@layer utilities {
+    .bg-grain {
+        background-image:
+            radial-gradient(circle at 1px 1px, rgba(25, 52, 42, 0.05) 1px, transparent 0);
+        background-size: 18px 18px;
+    }
+
+    .text-muted {
+        color: var(--muted);
+    }
+
+    .text-accent {
+        color: var(--accent-strong);
+    }
+
+    .shadow-panel {
+        box-shadow: var(--shadow-md);
+    }
+}
